@@ -1,9 +1,11 @@
 package main
 
 import (
-	"VulnScanner/src/api/v1"
-	"VulnScanner/src/grpcServ"
+	"VulnScanner/pkg/api/v1"
+	"VulnScanner/pkg/grpcServ"
+	"VulnScanner/pkg/logging"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -12,22 +14,20 @@ import (
 )
 
 func main() {
+	logging.Ent.Info("start program")
 	//Задаем параметры из окружения для последущего использования в docker контейнере
-	address := os.Getenv("ADDRESS")
-	if address == "" {
-		address = "127.0.0.1"
-	}
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "10500"
+		port = "10501"
 	}
 
 	//Задаем службу для прослушивания порта
-	listener, err := net.Listen("tcp", fmt.Sprintf("%s:%s", address, port))
+	listener, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", port))
 	if err != nil {
+		logging.Ent.WithFields(logrus.Fields{"error": err}).Error("error listening server")
 		log.Fatal(err)
 	}
-
+	logging.Ent.WithFields(logrus.Fields{"port": port}).Debug("set server listening port")
 	//Создаем новый gRPC сервер
 	grpcServer := grpc.NewServer()
 
@@ -37,6 +37,7 @@ func main() {
 	//Регистрируем собственную конфигурацию сервера и заем ее прослушивающей службе
 	api.RegisterNetVulnServiceServer(grpcServer, &grpcServ.GRPCServer{})
 	if err := grpcServer.Serve(listener); err != nil {
+		logging.Ent.WithFields(logrus.Fields{"error": err}).Error("server registration error")
 		log.Fatal(err)
 	}
 

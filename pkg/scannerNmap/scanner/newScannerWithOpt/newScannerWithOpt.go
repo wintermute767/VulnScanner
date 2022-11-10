@@ -1,19 +1,27 @@
 package newScannerWithOpt
 
 import (
+	"VulnScanner/pkg/logging"
 	"github.com/Ullaakut/nmap/v2"
-	"log"
+	"github.com/sirupsen/logrus"
 	"strconv"
 )
 
-func CreateNewScanNmap(targets *[]string, tcpPortInt *[]int32) (*nmap.Scanner, error) {
+func CreateNewScanNmap(targets *[]string, tcpPortInt *[]int32) *nmap.Scanner {
+	logging.Ent.Debug("creating new scanner Nmap")
 	//Переводим полученный от клиента gRPC формат tcp портов из float32 в string
+	//Если порты не заданы берем все стандартные
 	tcpPortStr := []string{}
-	for i := range *tcpPortInt {
-		n := (*tcpPortInt)[i]
-		t := strconv.FormatInt(int64(n), 10)
-		tcpPortStr = append(tcpPortStr, t)
+	if len(*tcpPortInt) > 0 {
+		for i := range *tcpPortInt {
+			n := (*tcpPortInt)[i]
+			t := strconv.FormatInt(int64(n), 10)
+			tcpPortStr = append(tcpPortStr, t)
+		}
+	} else {
+		tcpPortStr = []string{"1-1023"}
 	}
+
 	//Задаем параметры сканера:
 	//указываем хосты, порты, параметр определения служб на портах,
 	//скрипт определения уязвимостей и аргумент скрипта для получения всех уровней угроз уязвимостей
@@ -25,7 +33,8 @@ func CreateNewScanNmap(targets *[]string, tcpPortInt *[]int32) (*nmap.Scanner, e
 		nmap.WithScriptArguments(map[string]string{"mincvss=0": ""}),
 	)
 	if err != nil {
-		log.Fatalf("unable to create nmap scanner: %v", err)
+		logging.Ent.WithFields(logrus.Fields{"error": err}).Error("error create new scanner")
 	}
-	return scn, err
+
+	return scn
 }

@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.1
 // 	protoc        v3.21.9
-// source: src/api/v1/netvuln.proto
+// source: pkg/api/v1/netvuln.proto
 
 package api
 
@@ -371,8 +371,8 @@ var file_src_api_v1_netvuln_proto_depIdxs = []int32{
 	2, // 0: netvuln.v1.CheckVulnResponse.results:type_name -> netvuln.v1.TargetsReuslt
 	3, // 1: netvuln.v1.TargetsReuslt.services:type_name -> netvuln.v1.servicesOnHost
 	4, // 2: netvuln.v1.servicesOnHost.vulns:type_name -> netvuln.v1.vulnerability
-	0, // 3: netvuln.v1.NetVulnService.scanner:input_type -> netvuln.v1.CheckVulnRequest
-	1, // 4: netvuln.v1.NetVulnService.scanner:output_type -> netvuln.v1.CheckVulnResponse
+	0, // 3: netvuln.v1.NetVulnService.scannerGrpcServer:input_type -> netvuln.v1.CheckVulnRequest
+	1, // 4: netvuln.v1.NetVulnService.scannerGrpcServer:output_type -> netvuln.v1.CheckVulnResponse
 	4, // [4:5] is the sub-list for method output_type
 	3, // [3:4] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

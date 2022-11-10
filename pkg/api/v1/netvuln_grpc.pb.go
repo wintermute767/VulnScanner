@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpcServ v1.2.0
 // - protoc             v3.21.9
-// source: src/api/v1/netvuln.proto
+// source: pkg/api/v1/netvuln.proto
 
 package api
 
@@ -35,7 +35,7 @@ func NewNetVulnServiceClient(cc grpc.ClientConnInterface) NetVulnServiceClient {
 
 func (c *netVulnServiceClient) CheckVuln(ctx context.Context, in *CheckVulnRequest, opts ...grpc.CallOption) (*CheckVulnResponse, error) {
 	out := new(CheckVulnResponse)
-	err := c.cc.Invoke(ctx, "/netvuln.v1.NetVulnService/scanner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/netvuln.v1.NetVulnService/scannerGrpcServer", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ type UnimplementedNetVulnServiceServer struct {
 }
 
 func (UnimplementedNetVulnServiceServer) CheckVuln(context.Context, *CheckVulnRequest) (*CheckVulnResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method scanner not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method scannerGrpcServer not implemented")
 }
 func (UnimplementedNetVulnServiceServer) mustEmbedUnimplementedNetVulnServiceServer() {}
 
@@ -80,7 +80,7 @@ func _NetVulnService_CheckVuln_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/netvuln.v1.NetVulnService/scanner",
+		FullMethod: "/netvuln.v1.NetVulnService/scannerGrpcServer",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(NetVulnServiceServer).CheckVuln(ctx, req.(*CheckVulnRequest))
@@ -96,10 +96,10 @@ var NetVulnService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*NetVulnServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "scanner",
+			MethodName: "scannerGrpcServer",
 			Handler:    _NetVulnService_CheckVuln_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "src/api/v1/netvuln.proto",
+	Metadata: "pkg/api/v1/netvuln.proto",
 }

@@ -25,4 +25,4 @@ message Vulnerability {
   string identifier = 1;
   float cvss_score = 2;
 }
-option go_package = "./src/api_v1;api";
+option go_package = "./pkg/api_v1;api";
